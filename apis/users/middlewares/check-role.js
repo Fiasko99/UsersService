@@ -21,7 +21,7 @@ module.exports = function (accessRoles) {
       }
       
       const tokenData = jwt.verify(token.split(' ')[1], jwtSecret)
-      if (!accessRoles.includes(tokenData.role)) {
+      if (!accessRoles.includes(tokenData.role) || tokenData.role == 'admin') {
         return res.json({
           status: 403,
           message: "У вас нет доступа"

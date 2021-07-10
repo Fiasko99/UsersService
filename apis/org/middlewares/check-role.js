@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 
 const jwtSecret = process.env.JWT_SECRET || require('../../../localhost.config').JWT_SECRET
 
-module.exports = function (accessRole) {
+module.exports = function (accessRoles) {
   return function (req, res, next) {
     if (req.method === "OPTIONS") {
       next()
@@ -21,7 +21,7 @@ module.exports = function (accessRole) {
       }
       
       const tokenData = jwt.verify(token.split(' ')[1], jwtSecret)
-      if (!accessRoles.includes(tokenData.role)) {
+      if (!accessRoles.includes(tokenData.role) || tokenData.role == 'admin') {
         return res.json({
           status: 403,
           message: "У вас нет доступа"

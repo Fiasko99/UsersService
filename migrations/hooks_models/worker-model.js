@@ -4,7 +4,7 @@ module.exports = async (worker, options) => {
       login: worker.orgName
     }
   })
-  console.log(user)
+  console.log(user);
   if (user.role != 'organization') {
     throw new Error("Role must be organization")
   }

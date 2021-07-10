@@ -9,9 +9,9 @@ router.get('/search/:email', roleMiddleware(['moderator']), controllers.searchUs
 router.get('/user/:login', roleMiddleware(['moderator']), controllers.getUser)
 
 // users routes for get org
-router.get('/orgs/all', roleMiddleware(['user']), controllers.getOrgs)
-router.get('/search/org/:login', roleMiddleware(['user']), controllers.searchOrg)
-router.get('/org/:login', roleMiddleware(['user']), controllers.searchOrg)
+router.get('/orgs/all', controllers.getOrgs)
+router.get('/search/org/:login', controllers.searchOrg)
+router.get('/org/:login', controllers.searchOrg)
 
 // users routes for profiles options
 router.post('/user/update/:login', roleMiddleware(['user', 'moderator', 'organization']), controllers.updateUser)

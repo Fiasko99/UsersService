@@ -26,7 +26,7 @@ async function login(req, res) {
     .then(msg => {
       return parseInt(msg.toString('hex'), 16)
     })
-
+    
     auth = req.headers.authorization
     token = auth ? auth.split(' ')[1] : 'null'
     verifyData = null 
@@ -41,6 +41,10 @@ async function login(req, res) {
         token: token,
         user: verifyData
       })
+    }
+
+    if (!login && !password && !tokenExist) {
+      return res.json({message: "Нет данных для авторизации"})
     }
 
     if (tokenExist && !verifyData) {
@@ -63,12 +67,7 @@ async function login(req, res) {
       })
     }
 
-    if (!tokenExist) {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        return res.status(400).json({message: "Ошибка при авторизации", errors})
-      }
-
+    if (!tokenExist && login && password) {
       const user = await db.Users.findOne({
         attributes: ['login', 'email', 'name', 'password'],
         where: {
@@ -79,7 +78,7 @@ async function login(req, res) {
 
       if (!user) {
         return res.status(404).json({message: "Пользователь не существует"})
-      }
+      } 
 
       const validPassword = bcrypt.compareSync(password, user.password)
       if (!validPassword) {
@@ -96,6 +95,10 @@ async function login(req, res) {
         token: data.token,
         user: jwt.verify(data.token, jwtSecret)
       })
+    }
+
+    if (!tokenExist && login) {
+      return res.json({message: 'Перезагрузка'})
     }
 
   } catch (error) {
